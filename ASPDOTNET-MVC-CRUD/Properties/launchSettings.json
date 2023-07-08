@@ -22,7 +22,12 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "ssl": true,
+      "sslPort": 44365,
+      "sslCertPath": "C:\\Windows\\System32\\localhost.crt",
+      "sslKeyPath": "C:\\Windows\\System32\\localhost.key"
+
     }
   }
 }
