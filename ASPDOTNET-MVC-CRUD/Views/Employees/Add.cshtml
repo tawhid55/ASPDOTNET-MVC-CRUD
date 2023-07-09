@@ -2,8 +2,8 @@
 @{
 }
 
-
-<form method="post" action="Add">
+<h1>Add Employee</h1>
+<form method="post" action="Add" class="mt-5">
     <div class="mb-3">
         <label for="" class="form-label">Name</label>
         <input type="text" class="form-control" asp-for="Name">
@@ -19,6 +19,10 @@
     <div class="mb-3">
         <label for="" class="form-label">Date of Birth</label>
         <input type="date" class="form-control" asp-for="DateOfBirth">
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Department</label>
+        <input type="text" class="form-control" asp-for="Department">
     </div>
     
     <button type="submit" class="btn btn-primary">Submit</button>
