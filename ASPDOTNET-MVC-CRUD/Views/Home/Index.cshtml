@@ -1,10 +1,24 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center mt-5">
-    <h1 class="display-4">Employee CRUD Demo</h1>
-    <p class="lead">A simple ASP.NET Core MVC application for managing employees.</p>
-    <a asp-controller="Employees" asp-action="Index" class="btn btn-primary btn-lg mt-2">View Employees</a>
-    <a asp-controller="Employees" asp-action="Add" class="btn btn-outline-secondary btn-lg mt-2">Add Employee</a>
+<div class="page-head">
+    <div>
+        <h1 class="page-title">Employee Management</h1>
+        <p class="page-subtitle">View, add, and update employee records.</p>
+    </div>
 </div>
+
+<div class="d-flex gap-2 flex-wrap mb-4">
+    <a class="btn btn-primary" asp-controller="Employees" asp-action="Index">View employees</a>
+    <a class="btn btn-outline-secondary" asp-controller="Employees" asp-action="Add">Add employee</a>
+</div>
+
+<section class="summary" aria-labelledby="summary-title">
+    <h2 id="summary-title">Summary</h2>
+    <dl class="summary-list">
+        <div><dt>Employees</dt><dd>@ViewBag.EmployeeCount</dd></div>
+        <div><dt>Departments</dt><dd>@ViewBag.DepartmentCount</dd></div>
+        <div><dt>Total payroll</dt><dd>@(((long)ViewBag.PayrollTotal).ToString("N0"))</dd></div>
+    </dl>
+</section>

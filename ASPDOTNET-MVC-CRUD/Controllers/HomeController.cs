@@ -1,5 +1,7 @@
-﻿using ASPDOTNET_MVC_CRUD.Models;
+﻿using ASPDOTNET_MVC_CRUD.Data;
+using ASPDOTNET_MVC_CRUD.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace ASPDOTNET_MVC_CRUD.Controllers
@@ -7,14 +9,25 @@ namespace ASPDOTNET_MVC_CRUD.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly DemoDbContext demoDbContext;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, DemoDbContext demoDbContext)
         {
             _logger = logger;
+            this.demoDbContext = demoDbContext;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var employees = await demoDbContext.Employees.ToListAsync();
+
+            ViewBag.EmployeeCount = employees.Count;
+            ViewBag.DepartmentCount = employees
+                .Select(employee => employee.Department)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Count();
+            ViewBag.PayrollTotal = employees.Sum(employee => employee.Salary);
+
             return View();
         }
 

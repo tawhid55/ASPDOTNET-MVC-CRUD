@@ -1,43 +1,57 @@
-﻿@model ASPDOTNET_MVC_CRUD.Models.AddEmployeeViewModel
+@model ASPDOTNET_MVC_CRUD.Models.AddEmployeeViewModel
 
 @{
     ViewData["Title"] = "Add Employee";
 }
 
-<h1>Add Employee</h1>
+<div class="page-head page-head-compact">
+    <div>
+        <a class="back-link" asp-controller="Employees" asp-action="Index">
+            Back to employees
+        </a>
+        <h1 class="page-title">Add employee</h1>
+        <p class="page-subtitle">Create a new record for your team directory.</p>
+    </div>
+</div>
 
-<form asp-controller="Employees" asp-action="Add" method="post" class="mt-4">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-    <div class="mb-3">
-        <label asp-for="Name" class="form-label"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Email" class="form-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Salary" class="form-label"></label>
-        <input asp-for="Salary" class="form-control" min="0" step="1" />
-        <span asp-validation-for="Salary" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="DateOfBirth" class="form-label"></label>
-        <input asp-for="DateOfBirth" class="form-control" />
-        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Department" class="form-label"></label>
-        <input asp-for="Department" class="form-control" />
-        <span asp-validation-for="Department" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Submit</button>
-    <a asp-controller="Employees" asp-action="Index" class="btn btn-secondary">Cancel</a>
-</form>
+<div class="card-surface form-card">
+    <form asp-controller="Employees" asp-action="Add" method="post" novalidate>
+        <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" placeholder="Ayesha Rahman" autocomplete="name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" placeholder="name@company.com" autocomplete="email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Salary" class="form-label"></label>
+                <input asp-for="Salary" class="form-control" min="0" step="1" placeholder="55000" />
+                <span asp-validation-for="Salary" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="DateOfBirth" class="form-label"></label>
+                <input asp-for="DateOfBirth" class="form-control" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <label asp-for="Department" class="form-label"></label>
+                <input asp-for="Department" class="form-control" placeholder="Engineering" />
+                <span asp-validation-for="Department" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                Save employee
+            </button>
+            <a class="btn btn-outline-secondary" asp-controller="Employees" asp-action="Index">Cancel</a>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
