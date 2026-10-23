@@ -3,14 +3,14 @@ const assert = require('node:assert/strict');
 const { spawn, execFileSync } = require('node:child_process');
 const { randomUUID } = require('node:crypto');
 const path = require('node:path');
-const project = path.resolve(__dirname, '../ASPDOTNET-MVC-CRUD');
-const app = path.join(project, 'bin/Debug/net8.0/ASPDOTNET-MVC-CRUD.exe');
+const project = path.resolve(__dirname, '../EmployeeManagement');
+const app = path.join(project, 'bin/Debug/net8.0/EmployeeManagement.exe');
 const suffix = randomUUID();
 const password = `Test!Aa9-${randomUUID()}`;
 const adminEmail = `admin-${suffix}@example.test`;
 const viewerEmail = `viewer-${suffix}@example.test`;
 const env = { ...process.env, ASPNETCORE_ENVIRONMENT: 'Development',
-  ConnectionStrings__DemoConnectionString: 'Server=.\\SQLEXPRESS;Database=MvcCrudAuthTest;Trusted_Connection=True;Encrypt=False;TrustServerCertificate=True' };
+  ConnectionStrings__EmployeeConnectionString: 'Server=.\\SQLEXPRESS;Database=MvcCrudAuthTest;Trusted_Connection=True;Encrypt=False;TrustServerCertificate=True' };
 execFileSync(app, ['--create-admin'], { cwd: project, env: { ...env, Admin__Email: adminEmail, Admin__Password: password }, stdio: 'pipe' });
 const server = spawn(app, ['--urls', 'https://localhost:7255'], { cwd: project, env, windowsHide: true, stdio: 'pipe' });
 let logs = '';

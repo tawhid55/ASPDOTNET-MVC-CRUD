@@ -1,5 +1,5 @@
 $ErrorActionPreference = 'Stop'
-$projectPath = Join-Path $PSScriptRoot '../ASPDOTNET-MVC-CRUD'
+$projectPath = Join-Path $PSScriptRoot '../EmployeeManagement'
 $adminCredential = Get-Credential -Message 'Enter a new administrator email and password'
 if ($null -eq $adminCredential) { return }
 $previousEnvironment = $env:ASPNETCORE_ENVIRONMENT

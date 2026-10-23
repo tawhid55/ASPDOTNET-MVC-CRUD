@@ -13,11 +13,11 @@ Passwords are hashed by Identity. All form submissions have CSRF protection. Aut
 
 ## Run locally
 
-1. Set `ConnectionStrings:DemoConnectionString` in `ASPDOTNET-MVC-CRUD/appsettings.Development.json` for your SQL Server.
+1. Set `ConnectionStrings:EmployeeConnectionString` in `EmployeeManagement/appsettings.Development.json` for your SQL Server.
 2. Apply the migrations:
 
    ```powershell
-   dotnet ef database update --project ASPDOTNET-MVC-CRUD -- --environment Development
+   dotnet ef database update --project EmployeeManagement -- --environment Development
    ```
 
 3. Create an administrator using a new email address:
@@ -31,7 +31,7 @@ Passwords are hashed by Identity. All form submissions have CSRF protection. Aut
 4. Start the app:
 
    ```powershell
-   dotnet run --project ASPDOTNET-MVC-CRUD
+   dotnet run --project EmployeeManagement
    ```
 
 5. Open https://localhost:7151 and log in. Use Register for regular, view-only accounts.
@@ -55,8 +55,8 @@ Email confirmation and password recovery are not configured; no email provider i
 The tests use the separate `MvcCrudAuthTest` database on `.\SQLEXPRESS` and HTTPS port 7255. They create unique test accounts, create and delete a test employee, and leave existing application records untouched. Test accounts remain in the test database for inspection.
 
 ```powershell
-dotnet build ASPDOTNET-MVC-CRUD
-dotnet ef database update --project ASPDOTNET-MVC-CRUD --connection 'Server=.\SQLEXPRESS;Database=MvcCrudAuthTest;Trusted_Connection=True;Encrypt=False;TrustServerCertificate=True' -- --environment Development
+dotnet build EmployeeManagement
+dotnet ef database update --project EmployeeManagement --connection 'Server=.\SQLEXPRESS;Database=MvcCrudAuthTest;Trusted_Connection=True;Encrypt=False;TrustServerCertificate=True' -- --environment Development
 node tests/auth-crud.cjs
 ```
 
