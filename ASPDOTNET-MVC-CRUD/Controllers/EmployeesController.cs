@@ -21,6 +21,7 @@ namespace ASPDOTNET_MVC_CRUD.Controllers
             var employees = await demoDbContext.Employees.ToListAsync();
             return View(employees);
         }
+
         [HttpGet]
         public IActionResult Add()
         {
@@ -28,84 +29,91 @@ namespace ASPDOTNET_MVC_CRUD.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(AddEmployeeViewModel addEmployeeRequest)
         {
-            var employe = new Employee()
+            if (!ModelState.IsValid)
+            {
+                return View(addEmployeeRequest);
+            }
+
+            var employee = new Employee()
             {
                 Id = Guid.NewGuid(),
                 Name = addEmployeeRequest.Name,
                 Email = addEmployeeRequest.Email,
                 Salary = addEmployeeRequest.Salary,
                 Department = addEmployeeRequest.Department,
-                DateOfBirth = addEmployeeRequest.DateOfBirth
+                DateOfBirth = addEmployeeRequest.DateOfBirth!.Value
             };
 
-            await demoDbContext.Employees.AddAsync(employe);
+            await demoDbContext.Employees.AddAsync(employee);
             await demoDbContext.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
-        public async Task<IActionResult> View(Guid id)
+        public async Task<IActionResult> Edit(Guid id)
         {
-            var employe = await demoDbContext.Employees.FirstOrDefaultAsync(x => x.Id == id);
+            var employee = await demoDbContext.Employees.FirstOrDefaultAsync(x => x.Id == id);
 
-            if(employe != null)
+            if (employee == null)
             {
-                var viewModel = new UpdateEmployeeViewModel()
-                {
-                    Id = employe.Id,
-                    Name = employe.Name,
-                    Email = employe.Email,
-                    Salary = employe.Salary,
-                    Department = employe.Department,
-                    DateOfBirth = employe.DateOfBirth
-                };
-
-                return await Task.Run(() => View("View", viewModel));
+                return NotFound();
             }
 
-            
+            var viewModel = new UpdateEmployeeViewModel()
+            {
+                Id = employee.Id,
+                Name = employee.Name,
+                Email = employee.Email,
+                Salary = employee.Salary,
+                Department = employee.Department,
+                DateOfBirth = employee.DateOfBirth
+            };
 
-            return RedirectToAction("Index");
+            return View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> View(UpdateEmployeeViewModel updateEmployeeViewModel)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(UpdateEmployeeViewModel updateEmployeeViewModel)
         {
-            var employee = await demoDbContext.Employees.FindAsync(updateEmployeeViewModel.Id);
-            
-            if(employee != null)
+            if (!ModelState.IsValid)
             {
-                employee.Name = updateEmployeeViewModel.Name;
-                employee.Email = updateEmployeeViewModel.Email;
-                employee.Salary = updateEmployeeViewModel.Salary;
-                employee.DateOfBirth = updateEmployeeViewModel.DateOfBirth;
-                employee.Department = updateEmployeeViewModel.Department;
-
-                await demoDbContext.SaveChangesAsync();
-
-                return RedirectToAction("Index");
-                
+                return View(updateEmployeeViewModel);
             }
 
-            return RedirectToAction("Index");
+            var employee = await demoDbContext.Employees.FindAsync(updateEmployeeViewModel.Id);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            employee.Name = updateEmployeeViewModel.Name;
+            employee.Email = updateEmployeeViewModel.Email;
+            employee.Salary = updateEmployeeViewModel.Salary;
+            employee.DateOfBirth = updateEmployeeViewModel.DateOfBirth!.Value;
+            employee.Department = updateEmployeeViewModel.Department;
+
+            await demoDbContext.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(UpdateEmployeeViewModel updateEmployeeViewModel)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var employee = await demoDbContext.Employees.FindAsync(updateEmployeeViewModel.Id);
+            var employee = await demoDbContext.Employees.FindAsync(id);
 
-            if(employee != null)
+            if (employee != null)
             {
                 demoDbContext.Employees.Remove(employee);
                 await demoDbContext.SaveChangesAsync();
-
-                return RedirectToAction("Index");
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
     }
 }
