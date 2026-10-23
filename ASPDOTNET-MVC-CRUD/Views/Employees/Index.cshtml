@@ -9,15 +9,15 @@
         <h1 class="page-title">Employees</h1>
         <p class="page-subtitle">@Model.Count employee@(Model.Count == 1 ? "" : "s")</p>
     </div>
-    <a class="btn btn-primary" asp-controller="Employees" asp-action="Add">Add employee</a>
+    @if (User.IsInRole("Admin")) { <a class="btn btn-primary" asp-controller="Employees" asp-action="Add">Add employee</a> }
 </div>
 
 @if (Model.Count == 0)
 {
     <div class="card-surface empty-state">
         <h2 class="empty-title">No employees yet</h2>
-        <p class="empty-text">Add an employee to get started.</p>
-        <a class="btn btn-primary" asp-controller="Employees" asp-action="Add">Add employee</a>
+        <p class="empty-text">No employee records are available.</p>
+        @if (User.IsInRole("Admin")) { <a class="btn btn-primary" asp-controller="Employees" asp-action="Add">Add employee</a> }
     </div>
 }
 else
@@ -44,7 +44,11 @@ else
                         <td class="text-end text-nowrap">@employee.Salary.ToString("N0")</td>
                         <td class="text-nowrap">@employee.DateOfBirth.ToString("dd MMM yyyy")</td>
                         <td>
-                            <a asp-controller="Employees" asp-action="Edit" asp-route-id="@employee.Id" aria-label="Edit @employee.Name">Edit</a>
+                            <a asp-action="Details" asp-route-id="@employee.Id">Details</a>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a class="ms-2" asp-action="Edit" asp-route-id="@employee.Id">Edit</a>
+                            }
                         </td>
                     </tr>
                 }

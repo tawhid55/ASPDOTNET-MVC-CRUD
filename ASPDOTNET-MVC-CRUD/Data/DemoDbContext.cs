@@ -1,11 +1,13 @@
-﻿using ASPDOTNET_MVC_CRUD.Models.Domain;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using ASPDOTNET_MVC_CRUD.Models.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace ASPDOTNET_MVC_CRUD.Data
 {
-    public class DemoDbContext : DbContext
+    public class DemoDbContext : IdentityDbContext<IdentityUser>
     {
-        public DemoDbContext(DbContextOptions options) : base(options)
+        public DemoDbContext(DbContextOptions<DemoDbContext> options) : base(options)
         {
         }
 

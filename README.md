@@ -1,90 +1,65 @@
-# ASPDOTNET-MVC-CRUD
+# Employee Management
 
-A simple ASP.NET Core MVC demo application that manages employees with full CRUD
-(Create, Read, Update, Delete) functionality.
+A simple ASP.NET Core MVC application using .NET 8, SQL Server, EF Core, ASP.NET Core Identity, and Bootstrap.
 
-## Tech stack
+## Permissions
 
-- ASP.NET Core MVC on **.NET 8**
-- **Entity Framework Core 8** with SQL Server
-- Bootstrap 5, jQuery, jQuery Validation
-- Razor views
+- Guests can register and log in.
+- Registered users can view the dashboard, employee list, and employee details.
+- Administrators can also add, edit, and delete employees.
+- Registration never grants administrator access.
 
-## Features
+Passwords are hashed by Identity. All form submissions have CSRF protection. Authentication cookies require HTTPS. Five failed login attempts lock an account for 15 minutes.
 
-- Employee list
-- Add a new employee
-- Edit an existing employee
-- Delete an employee (with a confirmation prompt)
-- Server-side and client-side validation
-- Anti-forgery (CSRF) protection on all POST actions
-- Async database calls through EF Core
+## Run locally
 
-## Prerequisites
-
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) (or newer)
-- SQL Server Express / LocalDB / full SQL Server
-
-## Setup
-
-1. Set your database connection string in
-   `ASPDOTNET-MVC-CRUD/appsettings.Development.json`:
-
-   ```json
-   "ConnectionStrings": {
-     "DemoConnectionString": "Server=.\\SQLEXPRESS;Database=MvcDemoDb;Trusted_Connection=True;Encrypt=False;TrustServerCertificate=True"
-   }
-   ```
-
-2. Apply the EF Core migration (creates the database and `Employees` table):
+1. Set `ConnectionStrings:DemoConnectionString` in `ASPDOTNET-MVC-CRUD/appsettings.Development.json` for your SQL Server.
+2. Apply the migrations:
 
    ```powershell
-   dotnet ef database update --project ASPDOTNET-MVC-CRUD
+   dotnet ef database update --project ASPDOTNET-MVC-CRUD -- --environment Development
    ```
 
-3. Run the application:
+3. Create an administrator using a new email address:
+
+   ```powershell
+   ./scripts/create-admin.ps1
+   ```
+
+   Enter the email and password when prompted. Use at least 8 characters with uppercase, lowercase, a number, and a symbol. Credentials are passed through temporary process environment variables, never saved to the repository. Existing accounts are not silently promoted or overwritten.
+
+4. Start the app:
 
    ```powershell
    dotnet run --project ASPDOTNET-MVC-CRUD
    ```
 
-4. Open one of the URLs from `Properties/launchSettings.json`:
+5. Open https://localhost:7151 and log in. Use Register for regular, view-only accounts.
 
-   - https://localhost:7151
-   - http://localhost:5136
-
-## Project structure
-
-```
-ASPDOTNET-MVC-CRUD/
-├── Controllers/
-│   ├── EmployeesController.cs   # CRUD actions
-│   └── HomeController.cs        # Home / Privacy / Error
-├── Data/
-│   └── DemoDbContext.cs         # EF Core DbContext
-├── Migrations/                  # Initial migration
-├── Models/
-│   ├── Domain/Employee.cs
-│   ├── AddEmployeeViewModel.cs
-│   ├── UpdateEmployeeViewModel.cs
-│   └── ErrorViewModel.cs
-├── Views/
-│   ├── Employees/
-│   │   ├── Index.cshtml         # Employee list
-│   │   ├── Add.cshtml           # Add form
-│   │   └── Edit.cshtml          # Edit / delete form
-│   ├── Home/
-│   └── Shared/
-└── wwwroot/                     # Bootstrap, jQuery, CSS, JS
-```
+Stop the running app before rebuilding so compiled Razor views and static styles stay in sync. For deployment, apply migrations before starting the app and configure the production SQL Server connection and HTTPS certificate.
 
 ## Routes
 
-| Method | Route | Description |
-|---|---|---|
-| GET | `/Employees` | List all employees |
-| GET | `/Employees/Add` | Show the add form |
-| POST | `/Employees/Add` | Create an employee |
-| GET | `/Employees/Edit/{id}` | Show the edit form |
-| POST | `/Employees/Edit` | Update an employee |
-| POST | `/Employees/Delete` | Delete an employee |
+| Route | Access |
+| --- | --- |
+| `/Account/Register`, `/Account/Login` | Public |
+| `/Account/Logout` | Signed in, POST only |
+| `/`, `/Employees`, `/Employees/Details/{id}` | Signed in |
+| `/Employees/Add`, `/Employees/Edit/{id}` | Admin |
+| `/Employees/Delete` | Admin, POST only |
+
+Email confirmation and password recovery are not configured; no email provider is required for this local application.
+
+## Integration checks
+
+The tests use the separate `MvcCrudAuthTest` database on `.\SQLEXPRESS` and HTTPS port 7255. They create unique test accounts, create and delete a test employee, and leave existing application records untouched. Test accounts remain in the test database for inspection.
+
+```powershell
+dotnet build ASPDOTNET-MVC-CRUD
+dotnet ef database update --project ASPDOTNET-MVC-CRUD --connection 'Server=.\SQLEXPRESS;Database=MvcCrudAuthTest;Trusted_Connection=True;Encrypt=False;TrustServerCertificate=True' -- --environment Development
+node tests/auth-crud.cjs
+```
+
+Checks cover registration, login/logout, role restrictions on GET and POST, attempted role injection, CSRF rejection, safe return URLs, failed-login lockout, duplicate registration, validation, details, create, update, delete, and missing records.
+
+Identity configuration follows [Microsoft's ASP.NET Core Identity documentation](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-configuration?view=aspnetcore-8.0).

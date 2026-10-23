@@ -1,4 +1,5 @@
-﻿using ASPDOTNET_MVC_CRUD.Data;
+using Microsoft.AspNetCore.Authorization;
+using ASPDOTNET_MVC_CRUD.Data;
 using ASPDOTNET_MVC_CRUD.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,7 @@ namespace ASPDOTNET_MVC_CRUD.Controllers
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [AllowAnonymous]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

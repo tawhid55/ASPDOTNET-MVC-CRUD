@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace ASPDOTNET_MVC_CRUD.Models
 {
-    public class UpdateEmployeeViewModel
+    public class UpdateEmployeeViewModel : IValidatableObject
     {
         public Guid Id { get; set; }
 
@@ -30,5 +30,10 @@ namespace ASPDOTNET_MVC_CRUD.Models
         [StringLength(100, ErrorMessage = "Department cannot be longer than 100 characters.")]
         [Display(Name = "Department")]
         public string Department { get; set; } = string.Empty;
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (DateOfBirth > DateTime.Today)
+                yield return new ValidationResult("Date of birth cannot be in the future.", new[] { nameof(DateOfBirth) });
+        }
     }
 }

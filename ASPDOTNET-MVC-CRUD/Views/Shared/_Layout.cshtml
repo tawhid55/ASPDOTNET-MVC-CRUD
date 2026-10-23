@@ -27,12 +27,30 @@
                         <li class="nav-item">
                             <a class="nav-link @(controller == "Employees" ? "active" : "")" asp-controller="Employees" asp-action="Index">Employees</a>
                         </li>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item"><span class="nav-link text-break">@User.Identity.Name</span></li>
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="Logout" method="post">
+                                    <button type="submit" class="btn btn-outline-secondary btn-sm my-1">Logout</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Login</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Register">Register</a></li>
+                        }
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
     <main class="container page-shell">
+        @if (TempData["Success"] is string message)
+        {
+            <div class="alert alert-success" role="status">@message</div>
+        }
         @RenderBody()
     </main>
     <footer class="border-top">

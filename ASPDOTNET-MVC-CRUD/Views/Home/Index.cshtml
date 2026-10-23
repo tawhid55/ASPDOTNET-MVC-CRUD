@@ -11,7 +11,7 @@
 
 <div class="d-flex gap-2 flex-wrap mb-4">
     <a class="btn btn-primary" asp-controller="Employees" asp-action="Index">View employees</a>
-    <a class="btn btn-outline-secondary" asp-controller="Employees" asp-action="Add">Add employee</a>
+    @if (User.IsInRole("Admin")) { <a class="btn btn-outline-secondary" asp-controller="Employees" asp-action="Add">Add employee</a> }
 </div>
 
 <section class="summary" aria-labelledby="summary-title">
